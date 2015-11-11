@@ -1,26 +1,18 @@
 package l1_ui;
+import l2_lg.Client;
+import l2_lg.Session;
+import l2_lg.SessionImpl;
+import l3_da.Persistence;
+import multex.Exc;
+import multex.Failure;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
-
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import l2_lg.Client;
-import l2_lg.Session;
-import l2_lg.SessionImpl;
-import multex.Exc;
-import multex.Failure;
-import l3_da.Persistence;
 
 /**An application for management of clients. Uses a Swing UI.*/
 public class ClientSwingApplication {
@@ -105,7 +97,7 @@ public class ClientSwingApplication {
 	}
 
 	final Action saveAction = new ExceptionReportingSwingAction("Save") {
-        @Override public void actionPerformedWithThrows(ActionEvent ev) {
+         @Override public void actionPerformedWithThrows(ActionEvent ev) {
             System.out.println("Save ...");
 	  		final long id = getInternalId();
 			try {

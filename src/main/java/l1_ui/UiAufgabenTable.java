@@ -1,6 +1,8 @@
 package l1_ui;
 
 import l4_dm.DmAufgabeStatus;
+import l4_dm.DmSchritt;
+import l4_dm.DmVorhaben;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -22,13 +24,45 @@ public class UiAufgabenTable extends JPanel{
                 "#Teile",
                 "Status"};
 
+        final DmSchritt schritt1 = new DmSchritt(){
+            @Override
+            public Long getId(){
+                return (long) 1;
+            }
+        };
+        schritt1.setTitel("Schritt 1: Vorbereitung");
+
+        final DmVorhaben vorhaben1 = new DmVorhaben(){
+            @Override
+            public Long getId(){
+                return (long) 2;
+            }
+            @Override
+            public DmAufgabeStatus getStatus(){
+                return DmAufgabeStatus.inBearbeitung;
+            }
+            @Override
+            public int getAnzahlTeile(){
+                return 2;
+            }
+        };
+        vorhaben1.setTitel("Vorhaben: Bearbeiten");
+
+        final DmSchritt schritt2 = new DmSchritt(){
+            @Override
+            public Long getId(){
+                return (long) 3;
+            }
+        };
+        schritt2.setTitel("Schritt 3: Beenden");
+
         final Object[][] data = {
-                {new Integer(1), "Schritt 1: Vorbereitung",
-                        new Integer(0), DmAufgabeStatus.erledigt.toString()},
-                {new Integer(2), "Vorhaben: Bearbeiten",
-                        new Integer(2), DmAufgabeStatus.inBearbeitung.toString()},
-                {new Integer(3), "Schritt 3: Beenden",
-                        new Integer(0), DmAufgabeStatus.inBearbeitung.toString()}
+                {schritt1.getId() , schritt1.getTitel(), schritt1.getAnzahlTeile()
+                        , schritt1.getStatus()},
+                {vorhaben1.getId(), vorhaben1.getTitel(), vorhaben1.getAnzahlTeile()
+                        , vorhaben1.getStatus()},
+                {schritt2.getId() , schritt2.getTitel(), schritt2.getAnzahlTeile()
+                        , schritt2.getStatus()}
         };
         final UiAufgabenTable table = new UiAufgabenTable(columnNames, data);
         table.fillWithTestData();

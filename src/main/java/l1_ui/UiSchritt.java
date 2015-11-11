@@ -5,7 +5,7 @@ public class UiSchritt extends UiAufgabe{
 
     protected UiSchritt(String frameTitel) {
         super(frameTitel);
-        erledigt.setEditable(false);
+        jtf_erledigt.setEditable(false);
     }
 
     public static void main(String[] args){

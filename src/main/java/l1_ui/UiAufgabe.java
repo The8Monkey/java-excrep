@@ -1,20 +1,18 @@
 package l1_ui;
 
 import multex.Exc;
-import multex.Swing;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class UiAufgabe extends JPanel implements ActionListener {
+public class UiAufgabe extends JPanel {
 
     protected final JLabel label1, label2, label3, label4, label5, label6, label7, label8;
-    protected final JTextField id, titel, rest, ist, status, erledigt;
+    protected final JTextField id, titel, rest, ist, status, jtf_erledigt;
     protected final JComboBox jcb_vorhaben;
     protected final JTextArea jta_beschreibung;
     protected final JButton button_erfassen, button_aendern, button_erledigt;
@@ -37,22 +35,16 @@ public class UiAufgabe extends JPanel implements ActionListener {
         titel.setText("Asdf Test");
         rest = new JTextField();
         ist = new JTextField();
-        erledigt = new JTextField();
-        erledigt.setText("noch nicht");
+        jtf_erledigt = new JTextField();
+        jtf_erledigt.setText("noch nicht");
         final String[] combostrings = {"1", "2", "3", "4"};
         jcb_vorhaben = new JComboBox(combostrings);
         jta_beschreibung = new JTextArea(5,10);
         final JScrollPane sp = new JScrollPane(jta_beschreibung);
 
-        button_erfassen = new JButton("Erfassen");
-        button_erfassen.setActionCommand("Erledigen des Schritt");
-        button_erfassen.addActionListener(this);
-        button_aendern = new JButton("Aendern");
-        button_aendern.setActionCommand("Aendern des Schritt");
-        button_aendern.addActionListener(this);
-        button_erledigt = new JButton("Erledigt");
-        button_erledigt.setActionCommand("Erledigt des Schritt");
-        button_erledigt.addActionListener(this);
+        button_erfassen = new JButton(erfassen);
+        button_aendern = new JButton(aendern);
+        button_erledigt = new JButton(erledigt);
 
         final Container c = new Container();
         c.setLayout(new FlowLayout());
@@ -77,7 +69,7 @@ public class UiAufgabe extends JPanel implements ActionListener {
         labels.add(label7);
         labels.add(status);
         labels.add(label8);
-        labels.add(erledigt);
+        labels.add(jtf_erledigt);
         labels.add(c);
         createFrame(frameTitel, labels);
     }
@@ -94,22 +86,22 @@ public class UiAufgabe extends JPanel implements ActionListener {
         System.err.println(df.format(date)+" "+getClass().getName()+" INFORMATION:");
     }
 
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Erledigen des Schritt":
-                try {
-                    System.out.println(e.getActionCommand() + titel.getText());
-                    throw new Exc("Diese Aufgabe ist zu Schwer!");
-                } catch (Exc c) {
-                    Swing.report(new Frame(), c);
-                }
-                break;
-            case "Aendern des Schritt":
-                System.out.println(e.getActionCommand()+" "+ titel.getText());
-                break;
-            case "Erledigt des Schritt":
-                System.out.println(e.getActionCommand()+" "+ titel.getText());
-                break;
+    final Action erfassen = new ExceptionReportingSwingAction("Erfassen"){
+        @Override public void actionPerformedWithThrows(ActionEvent ev) {
+            System.out.println("Erfassen des Schrittes: " + titel.getText());
+            throw new Exc("Diese Aufgabe ist zu Schwer!");
         }
-    }
+    };
+
+    final Action aendern = new ExceptionReportingSwingAction("Aendern"){
+        @Override public void actionPerformedWithThrows(ActionEvent ev) {
+            System.out.println("Aendern des Schrittes: " + titel.getText());
+        }
+    };
+
+    final Action erledigt = new ExceptionReportingSwingAction("Erledigt"){
+        @Override public void actionPerformedWithThrows(ActionEvent ev) {
+            System.out.println("Erledigen des Schrittes: " + titel.getText());
+        }
+    };
 }

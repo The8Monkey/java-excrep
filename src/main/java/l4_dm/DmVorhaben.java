@@ -1,10 +1,12 @@
 package l4_dm;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Date;
 import java.util.List;
 
 /**Datenmodellklasse für ein Vorhaben, welches aus mehreren Aufgaben besteht. Ohne Prüfungen und Folgeaktionen.*/
-//@Entity  @Table(name="aufgabe")
+@Entity @Table(name="aufgabe")
 public class DmVorhaben extends DmAufgabe {
 	
 	/**In der Datenbank zu speichernder End-Termin*/

@@ -1,9 +1,12 @@
 package l4_dm;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Date;
 
 /**Datenmodellklasse für einen Schritt eines Vorhabens. Ohne Prüfungen und Folgeaktionen.*/
-//@Entity @Table(name="aufgabe")
+@Entity
+@Table(name="aufgabe")
 public class DmSchritt extends DmAufgabe {
 
 	private int restStunden;
