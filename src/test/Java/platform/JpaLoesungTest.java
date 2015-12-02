@@ -117,7 +117,7 @@ public class JpaLoesungTest {
         final EMTransaction tx = new EMTransaction();
         final DmSchritt schritt = tx.em.find(DmSchritt.class, id);
         tx.em.remove(schritt);
-        assertEquals(null, tx.em.find(DmSchritt.class, id));
+        assertNull(tx.em.find(DmSchritt.class, id));
         tx.close(true);
     }
 
