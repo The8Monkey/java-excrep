@@ -1,11 +1,16 @@
 package l4_dm;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 
 /**Datenmodellklasse für eine Aufgabe im Allgemeinen. Ohne Prüfungen und Folgeaktionen.*/
-@MappedSuperclass
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@Table(name="aufgabe")
+/*@MappedSuperclass*/@Entity @Inheritance(strategy=InheritanceType.SINGLE_TABLE) @Table(name="aufgabe") 
 public abstract class DmAufgabe {
 
 	/**Konstante für das Attribut id mit der Bedeutung, dass das Objekt noch nicht persistiert wurde*/

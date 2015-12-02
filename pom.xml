@@ -8,6 +8,10 @@
       <artifactId>multex</artifactId>
       <version>8.3</version>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
   </dependencies>
   <parent>
     <groupId>de.bht-berlin.knabe</groupId>
