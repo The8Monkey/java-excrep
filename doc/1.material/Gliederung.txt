@@ -64,7 +64,6 @@ GLIEDERUNG
 10. Fazit
 
 ---------------------
-TODO Knabe
 
 - Zentrales SVN
 - Swing-Oberfläche
