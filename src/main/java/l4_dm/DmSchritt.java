@@ -1,12 +1,14 @@
 package l4_dm;
 
+import java.sql.Date;
+import java.util.Collections;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.sql.Date;
 
 /**Datenmodellklasse für einen Schritt eines Vorhabens. Ohne Prüfungen und Folgeaktionen.*/
-@Entity
-@Table(name="aufgabe")
+@Entity @Table(name="aufgabe") 
 public class DmSchritt extends DmAufgabe {
 
 	private int restStunden;
@@ -26,6 +28,12 @@ public class DmSchritt extends DmAufgabe {
 	@Override
 	public int getAnzahlTeile() {
 		return 0;
+	}
+
+	//TODO 2015-12-02 Wegen dieser neuen Methode erneut publizieren!
+	@Override
+	public List<DmAufgabe> getTeile(){
+		return Collections.<DmAufgabe>emptyList();
 	}
 
 	/**Liefert den Zeitpunkt, an dem diese Aufgabe als erledigt gebucht wurde.*/

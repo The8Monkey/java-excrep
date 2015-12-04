@@ -1,11 +1,11 @@
 package l3_da;
 
 import l4_dm.DmAufgabe;
+import multex.MultexUtil;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ public class DaGenericForJPA<E extends DmAufgabe> implements DaGeneric<E> {
     @Override
     public boolean save(E entity) {
         if(entityManager.contains(entity)){
-            entityManager.refresh(entity);
+            entityManager.merge(entity);
             return true;
         }else {
             entityManager.persist(entity);
@@ -42,29 +42,29 @@ public class DaGenericForJPA<E extends DmAufgabe> implements DaGeneric<E> {
 
     @Override
     public E find(long id) throws IdNotFoundExc {
-        if(entityManager.find(managedClass, id) == null){
-            throw new IdNotFoundExc();
+        final E e = entityManager.find(managedClass, id);
+        if(e == null){
+            throw MultexUtil.create(IdNotFoundExc.class, managedClass.getSimpleName(), id);
         }
-        return entityManager.find(managedClass, id);
+        return e;
     }
 
     @Override
-    public List findAll() {
-        return entityManager.createNativeQuery("SELECT t FROM :table t")
-                .setParameter("table", managedClass.getSimpleName())
-                .getResultList();
+    public List<E> findAll() {
+        final TypedQuery<E> query = entityManager.createQuery("SELECT t FROM " + managedClass.getName() + " t", managedClass);
+        return query.getResultList();
     }
 
     @Override
-    public List findByField(String fieldName, Object fieldValue) {
-        Query q = entityManager.createQuery("SELECT " + fieldName + " FROM " + managedClass.getSimpleName() + " "
-                + fieldName + " WHERE " + fieldName + "= " + fieldValue);
+    public List<E> findByField(String fieldName, Object fieldValue) {
+        final TypedQuery<E> q = entityManager.createQuery("SELECT t FROM " + managedClass.getName() + " t"
+                +" WHERE " + fieldName + "= " + fieldValue, managedClass);
         return q.getResultList();
     }
 
     @Override
-    public List findByWhere(String whereClause, Object... args) {
-        Query q = entityManager.createQuery("SELECT * FROM :table t WHERE " + whereClause)
+    public List<E> findByWhere(String whereClause, Object... args) {
+        final TypedQuery<E> q = entityManager.createQuery("SELECT * FROM :table t WHERE " + whereClause, managedClass)
                 .setParameter("table", managedClass.getSimpleName());
         for(int i = 0; i < args.length; i++) {
             q.setParameter(i, args[i]);
@@ -77,7 +77,8 @@ public class DaGenericForJPA<E extends DmAufgabe> implements DaGeneric<E> {
     @Override
     public List<E> findByExample(E example) {
         entityManager.find(managedClass.getClass() ,example);
-        List<E> stuff = entityManager.createQuery("Select a From" + managedClass.getSimpleName() + "a").getResultList();
+        List<E> stuff = entityManager.createQuery("Select a From" + managedClass.getSimpleName() + "a")
+                .getResultList();
         return stuff;
     }
 

@@ -6,32 +6,31 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 public class DaFactoryForJPA implements DaFactory {
-    private static final String persistenceUnitName = "fpa";
+    private static final String persistenceUnitName = "aufgabenplaner";
     private static final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
     private static final EntityManager entityManager = entityManagerFactory.createEntityManager();
     private EntityTransaction transaction;
 
     @Override
     public DaAufgabe getAufgabeDA() {
+
         return new DaAufgabeForJPA(entityManager);
     }
 
     @Override
     public DaSchritt getSchrittDA() {
+
         return new DaSchrittForJPA(entityManager);
     }
 
     @Override
     public DaVorhaben getVorhabenDA() {
+
         return new DaVorhabenForJPA(entityManager);
     }
 
     @Override
     public void beginTransaction() {
-        if(transaction.isActive()) {
-            System.err.print("Please close transaction befor starting a new one!");
-            return;
-        }
         transaction = entityManager.getTransaction();
         transaction.begin();
     }
@@ -39,12 +38,20 @@ public class DaFactoryForJPA implements DaFactory {
     @Override
     public void endTransaction(boolean ok) {
         if(!transaction.isActive()) return;
-        if(ok){
-            transaction.commit();
-        }else {
-            transaction.rollback();
+        try {
+            if (ok) {
+                transaction.commit();
+            } else {
+                transaction.rollback();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        entityManager.close();
         entityManager.clear();
+    }
+
+    public boolean isActive() {
+
+        return transaction != null && transaction.isActive();
     }
 }
