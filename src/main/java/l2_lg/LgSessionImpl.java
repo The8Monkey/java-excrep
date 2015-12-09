@@ -1,17 +1,28 @@
 package l2_lg;
 
+import l3_da.DaAufgabe;
 import l3_da.DaFactory;
+import l3_da.DaSchritt;
 import l3_da.DaVorhaben;
 import l4_dm.DmAufgabe;
 import l4_dm.DmSchritt;
+import l4_dm.DmVorhaben;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class LgSessionImpl implements LgSession{
-    final DaFactory da;
+    final DaFactory dF;
+    final DaAufgabe dA;
+    final DaVorhaben dV;
+    final DaSchritt dS;
 
-    public LgSessionImpl(DaFactory da){
-        this.da = da;
+    public LgSessionImpl(DaFactory dF){
+        this.dF = dF;
+        dA = dF.getAufgabeDA();
+        dV = dF.getVorhabenDA();
+        dS = dF.getSchrittDA();
     }
 
     public void transienteDatenFuellen(final DmAufgabe aufgabe,
@@ -38,26 +49,42 @@ public class LgSessionImpl implements LgSession{
         if(aufgabe.getIstStunden()<0){
             throw new IstStundenExc();
         }
-        return null;
+        if(aufgabe instanceof DmVorhaben){
+            if(((DmVorhaben) aufgabe).getEndTermin()==null){
+                throw new EndTerminExc();
+            }
+        }
+        //VorhabenRekusionExc ??? ka was das soll
+        return aufgabe;
     }
 
     @Override
     public DmSchritt schrittErledigen(DmSchritt schritt) throws TitelExc, IstStundenExc {
-        return null;
+        schritt.setRestStunden(0);
+        schritt.setErledigtZeitpunkt(new Date(Calendar.getInstance().getTimeInMillis()));
+        dS.save(schritt);
+        return schritt;
     }
 
     @Override
     public List<DmAufgabe> alleOberstenAufgabenLiefern() {
-        return null;
+        List<DmAufgabe> list = dA.findAll();
+        List<DmAufgabe> oberste = null;
+        for(DmAufgabe dO: list) {
+            if (dO.getGanzes() == null) {
+                oberste.add(dO);
+            }
+        }
+        return oberste;
     }
 
     @Override
     public void beginTransaction() {
-        da.beginTransaction();
+        dF.beginTransaction();
     }
 
     @Override
     public void endTransaction(boolean ok) {
-        da.endTransaction(ok);
+        dF.endTransaction(ok);
     }
 }
