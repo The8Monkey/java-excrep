@@ -12,6 +12,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
+
+
 public class LgSessionImpl implements LgSession{
     final DaFactory dF;
     final DaAufgabe dA;
@@ -28,7 +30,7 @@ public class LgSessionImpl implements LgSession{
     public void transienteDatenFuellen(final DmAufgabe aufgabe,
                                        final List<DmAufgabe> alleAufgaben){
         int stunden=0;
-        if(aufgabe.getClass()== DaVorhaben.class){
+        if(aufgabe instanceof DaVorhaben){
             for(DmAufgabe dAuf: alleAufgaben){
                 if(dAuf.getGanzes().equals(aufgabe)){
                     stunden+=aufgabe.getRestStunden()+aufgabe.getIstStunden();
@@ -55,6 +57,7 @@ public class LgSessionImpl implements LgSession{
             }
         }
         //VorhabenRekusionExc ??? ka was das soll
+        dF.getAufgabeDA().save(aufgabe);
         return aufgabe;
     }
 
