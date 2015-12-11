@@ -33,6 +33,7 @@ public class LgSessionImpl implements LgSession{
         if(aufgabe instanceof DaVorhaben){
             for(DmAufgabe dAuf: alleAufgaben){
                 if(dAuf.getGanzes().equals(aufgabe)){
+                    //getrennt addieren
                     stunden+=aufgabe.getRestStunden()+aufgabe.getIstStunden();
                 }
             }
@@ -43,7 +44,7 @@ public class LgSessionImpl implements LgSession{
     public <A extends DmAufgabe> A speichern(A aufgabe) throws TitelExc, RestStundenExc,
             IstStundenExc, EndTerminExc, VorhabenRekursionExc {
         if(aufgabe.getTitel().isEmpty()){
-            throw new TitelExc();
+            throw multex.MultexUtil.create(TitelExc.class,aufgabe.getTitel().length(),aufgabe.getTitel());
         }
         if(aufgabe.getRestStunden()<0){
             throw new RestStundenExc();
@@ -65,7 +66,7 @@ public class LgSessionImpl implements LgSession{
     public DmSchritt schrittErledigen(DmSchritt schritt) throws TitelExc, IstStundenExc {
         schritt.setRestStunden(0);
         schritt.setErledigtZeitpunkt(new Date(Calendar.getInstance().getTimeInMillis()));
-        dS.save(schritt);
+        this.speichern(schritt);
         return schritt;
     }
 
@@ -78,6 +79,7 @@ public class LgSessionImpl implements LgSession{
                 oberste.add(dO);
             }
         }
+        //transientedatenn füllen
         return oberste;
     }
 
